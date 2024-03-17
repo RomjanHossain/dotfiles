@@ -15,5 +15,7 @@
 .config/mpv/scripts/gallery-thumbgen-9.lua
 
 
+screenshots/*
+
 
 ^/README.*
