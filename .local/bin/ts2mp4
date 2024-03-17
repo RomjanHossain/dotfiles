@@ -1,0 +1,4 @@
+#!/bin/bash
+for file in *.ts; do
+  ffmpeg -i "$file" -c copy "${file%.*}.mkv"
+done

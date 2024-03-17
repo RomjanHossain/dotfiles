@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Check if the script is run as root
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root"
+  exit
+fi
+
+# Open the encrypted partition
+sudo cryptsetup open /dev/sda2 Linux
+
+# Check if opening was successful
+if [ $? -eq 0 ]; then
+    # Mount the opened partition
+    sudo mount /dev/mapper/Linux /media/Linux
+else
+    echo "Error: Failed to open the encrypted partition."
+fi
