@@ -1,290 +1,122 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""               
-"               
-"               ██╗   ██╗██╗███╗   ███╗██████╗  ██████╗
-"               ██║   ██║██║████╗ ████║██╔══██╗██╔════╝
-"               ██║   ██║██║██╔████╔██║██████╔╝██║     
-"               ╚██╗ ██╔╝██║██║╚██╔╝██║██╔══██╗██║     
-"                ╚████╔╝ ██║██║ ╚═╝ ██║██║  ██║╚██████╗
-"                 ╚═══╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝
-"               
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""               
-
-" Disable compatibility with vi which can cause unexpected issues.
-set nocompatible
-
-" Enable type file detection. Vim will be able to try to detect the type of file is use.
-filetype on
-
-" Enable plugins and load plugin for the detected file type.
-filetype plugin on
-
-" Load an indent file for the detected file type.
-filetype indent on
-
-" Turn syntax highlighting on.
+" to run python script from vim "
+autocmd FileType python map <buffer> <F9> :w<CR>:exec '!python3' shellescape(@%, 1)<CR>
+autocmd FileType python imap <buffer> <F9> <esc>:w<CR>:exec '!python3'
+" syntax on "
 syntax on
 
-" Add numbers to the file.
-set relativenumber
-
-set background=dark
-" " Highlight cursor line underneath the cursor horizontally.
-" set cursorline
-
-" " Highlight cursor line underneath the cursor vertically.
-" set cursorcolumn
-
-" Do not wrap lines. Allow long lines to extend as far as the line goes.
-set nowrap
-
-" While searching though a file incrementally highlight matching characters as you type.
-set incsearch
-
-" Ignore capital letters during search.
-set ignorecase
-
-" Override the ignorecase option if searching for capital letters.
-" This will allow you to search specifically for capital letters.
-set smartcase
-
-" Show partial command you type in the last line of the screen.
-set showcmd
-
-" Show the mode you are on the last line.
-set showmode
-
-" Show matching words during a search.
-set showmatch
-
-" Use highlighting when doing a search.
-set hlsearch
-
-" Set the commands to save in history default number is 20.
-set history=1000
-
-" Enable auto completion menu after pressing TAB.
-set wildmenu
-
-" Make wildmenu behave like similar to Bash completion.
-set wildmode=list:longest
-
-" There are certain files that we would never want to edit with Vim.
-" Wildmenu will ignore files with these extensions.
-set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
-
-" PLUGINS ---------------------------------------------------------------- {{{
-
+" this is for the vim plug in Plugins will be downloaded under the specified directory.
 call plug#begin('~/.vim/plugged')
 
-  Plug 'dense-analysis/ale'
+"fzf
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+" Declare the list of plugins.
+Plug 'tpope/vim-sensible'
+Plug 'junegunn/seoul256.vim'
+" this is the bottom bar
+Plug 'itchyny/lightline.vim'
+" this is color scheam
+Plug 'arcticicestudio/nord-vim'
+" this is file manager
+Plug 'preservim/nerdtree'
+" this is color s
+Plug 'ayu-theme/ayu-vim'
+Plug 'cocopon/iceberg.vim'
+" show file icons and other icons
+Plug 'ryanoasis/vim-devicons'
+" Better Comments
+Plug 'tpope/vim-commentary'
+" emmet for html
+Plug 'mattn/emmet-vim'
+" vim multiple cursor
+Plug 'terryma/vim-multiple-cursors'
+" ale plug in for syntax check asynchronously :
+Plug 'dense-analysis/ale'
+" auto format code by prettier
+" Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+Plug 'chiel92/vim-autoformat'
+" This is for C# development
+Plug 'OmniSharp/omnisharp-vim'
+" audo close bracket
+Plug 'jiangmiao/auto-pairs'
 
-  Plug 'preservim/nerdtree'
+" if has('nvim')
+"   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" else
+"   Plug 'Shougo/deoplete.nvim'
+"   Plug 'roxma/nvim-yarp'
+"   Plug 'roxma/vim-hug-neovim-rpc'
+" endif
+let g:deoplete#enable_at_startup = 1
 
-  Plug 'morhetz/gruvbox'
-  Plug 'tomasr/molokai'
-
-
-  "below function is needed for ycm:
-
-           function! BuildYCM(info)
-           if a:info.status == 'installed' || a:info.force
-              !./install.py
-           endif
-         endfunction
-
-        Plug 'ycm-core/YouCompleteMe', { 'do': function('BuildYCM') }
-
-
-  " Track the engine.
-  Plug 'SirVer/ultisnips'
-  " Snippets are separated from the engine. Add this if you want them:
-  Plug 'honza/vim-snippets'
-
+" List ends here. Plugins become visible to Vim after this call.
 call plug#end()
+" lets set the color scame
+" set termguicolors     " enable true colors support
+" let ayucolor="dark"
+" colorscheme iceberg
+" colorscheme ayu
+" colorscheme humanoid
+colorscheme nord
+" nerd tree on ctl+f
+nmap <C-f> :NERDTreeToggle<CR>
 
-" }}}
-
-" MAPPINGS --------------------------------------------------------------- {{{
-
-" Set the backslash as the leader key.
-" let mapleader = "space"
-
-" " Press \\ to jump back to the last cursor position.
-" nnoremap <leader>\ ``
-
-" " Press \p to print the current file to the default printer from a Linux operating system.
-" " View available printers:   lpstat -v
-" " Set default printer:       lpoptions -d <printer_name>
-" " <silent> means do not display output.
-" nnoremap <silent> <leader>p :%w !lp<CR>
-
-" Type jj to exit insert mode quickly.
-inoremap jj <Esc>
-
-" Press the space bar to type the : character in command mode.
-" nnoremap <space> :
-
-" Pressing the letter o will open a new line below the current one.
-" Exit insert mode after creating a new line above or below the current line.
-" nnoremap o o<esc>
-" nnoremap O O<esc>
-
-" Center the cursor vertically when moving to the next word during a search.
-" nnoremap n nzz
-" nnoremap N Nzz
-
-" Yank from cursor to the end of line.
-nnoremap Y y$
-
-" Map the F5 key to run a Python script inside Vim.
-" We map F5 to a chain of commands here.
-" :w saves the file.
-" <CR> (carriage return) is like pressing the enter key.
-" !clear runs the external clear screen command.
-" !python3 % executes the current file with Python.
-" nnoremap <f5> :w <CR>:!clear <CR>:!python3 % <CR>
-
-" You can split the window in Vim by typing :split or :vsplit.
-" Navigate the split view easier by pressing CTRL+j, CTRL+k, CTRL+h, or CTRL+l.
-" nnoremap <c-j> <c-w>j
-" nnoremap <c-k> <c-w>k
-" nnoremap <c-h> <c-w>h
-" nnoremap <c-l> <c-w>l
-
-" " Resize split windows using arrow keys by pressing:
-" " CTRL+UP, CTRL+DOWN, CTRL+LEFT, or CTRL+RIGHT.
-" noremap <c-up> <c-w>+
-" noremap <c-down> <c-w>-
-" noremap <c-left> <c-w>>
-" noremap <c-right> <c-w><
-
-" NERDTree specific mappings.
-" Map the F3 key to toggle NERDTree open and close.
-nnoremap <Space>e :NERDTreeToggle<CR>
-
-" Have nerdtree ignore certain files and directories.
-let NERDTreeIgnore=['\.git$', '\.jpg$', '\.mp4$', '\.ogg$', '\.iso$', '\.pdf$', '\.pyc$', '\.odt$', '\.png$', '\.gif$', '\.db$']
-
-" }}}
-
-" VIMSCRIPT -------------------------------------------------------------- {{{
-
-" Enable the marker method of folding.
-augroup filetype_vim
-    autocmd!
-    autocmd FileType vim setlocal foldmethod=marker
-augroup END
-
-" If the current file type is HTML, set indentation to 2 spaces.
-autocmd Filetype html setlocal tabstop=2 shiftwidth=2 expandtab
-
-" If Vim version is equal to or greater than 7.3 enable undofile.
-" This allows you to undo changes to a file even after saving it.
-if version >= 703
-    set undodir=~/.vim/backup
-    set undofile
-    set undoreload=10000
-endif
-
-" You can split a window into sections by typing `:split` or `:vsplit`.
-" Display cursorline and cursorcolumn ONLY in active window.
-augroup cursor_off
-    autocmd!
-    autocmd WinLeave * set nocursorline nocursorcolumn
-    autocmd WinEnter * set cursorline cursorcolumn
-augroup END
-
-" If GUI version of Vim is running set these options.
-if has('gui_running')
-
-    " Set the background tone.
-    set background=dark
-
-    " Set the color scheme.
-    colorscheme molokai
-
-    " Set a custom font you have installed on your computer.
-    " Syntax: <font_name>\ <weight>\ <size>
-    set guifont=Monospace\ Regular\ 12
-
-    " Display more of the file by default.
-    " Hide the toolbar.
-    set guioptions-=T
-
-    " Hide the the left-side scroll bar.
-    set guioptions-=L
-
-    " Hide the the left-side scroll bar.
-    set guioptions-=r
-
-    " Hide the the menu bar.
-    set guioptions-=m
-
-    " Hide the the bottom scroll bar.
-    set guioptions-=b
-
-    " Map the F4 key to toggle the menu, toolbar, and scroll bar.
-    " <Bar> is the pipe character.
-    " <CR> is the enter key.
-    nnoremap <F4> :if &guioptions=~#'mTr'<Bar>
-        \set guioptions-=mTr<Bar>
-        \else<Bar>
-        \set guioptions+=mTr<Bar>
-        \endif<CR>
-
-endif
-
-" }}}
-
-" STATUS LINE ------------------------------------------------------------ {{{
-
-" Clear status line when vimrc is reloaded.
-set statusline=
-
-" Status line left side.
-set statusline+=\ %F\ %M\ %Y\ %R
-
-" Use a divider to separate the left side from the right side.
-set statusline+=%=
-
-" Status line right side.
-"set statusline+=\ ascii:\ %b\ hex:\ 0x%B\ row:\ %l\ col:\ %c\ percent:\ %p%%
-
-" Show the status on the second to last line.
-set laststatus=2
-
-" }}}
-"
-"
-"
-"
-" for ALE errors
-function! LinterStatus() abort
-    let l:counts = ale#statusline#Count(bufnr(''))
-    let l:all_errors = l:counts.error + l:counts.style_error
-    let l:all_non_errors = l:counts.total - l:all_errors
-    return l:counts.total == 0 ? 'OK' : printf(
-        \   '%d⨉ %d⚠ ',
-        \   all_non_errors,
-        \   all_errors
-        \)
-endfunction
-
-let g:ale_lint_on_enter = 0
-let g:ale_lint_on_save = 1
-let g:ale_sign_error = '●'
-let g:ale_sign_warning = '.'
+" fzf file in ctrl+n
+map <C-p> :Files<CR>
+" nerdtree winsize
+let NERDTreeWinSize=20
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
 
 
-let g:UltiSnipsExpandTrigger="<S-t>"
-let g:UltiSnipsJumpForwardTrigger="<S-f>"
-let g:UltiSnipsJumpBackwardTrigger="<S-b>"
 
-" If you want :UltiSnipsEdit to split your window.
-let g:UltiSnipsEditSplit="vertical"
+"this is for the icon
+set encoding=UTF-8
 
+" show line nubmer
+set number relativenumber
+" set cursor line
+set cursorline
+set cursorlineopt=number
+autocmd ColorScheme * highlight CursorLineNr cterm=bold term=bold gui=bold
+" move visually selected lines up or down in various modes.
+nnoremap K :m .-2<CR>==
+nnoremap J :m .+1<CR>==
+vnoremap K :m '<-2<CR>gv=gv
+vnoremap J :m '>+1<CR>gv=gv
+" auto indentline
+set autoindent
 
-set statusline+=%=
-set statusline+=\ %{LinterStatus()}
+" copy paste in vim
+" vnoremap <C-c> "*y :let @+=@*<CR>
+" vnoremap <C-y> "+y
+" map <C-v> "+P
+" vnoremap <C-
+noremap <C-c> "+y
+noremap <C-v> "+p
+" this is for the alacritty terminal
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48:2;%lu;%lu;%lum"
+" split navigation to ctrl+j instead of ctrl+w
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+" open split between botton and right
+set splitbelow
+set splitright
+" note to resize splited window
+" ctrl+w _ <- height of the current screen
+" ctrl+w | <- width of the current screen
+" ctrl+w = <- normalize all split
 
+" Replace all is aliased to S
+nnoremap S :%s//g<Left><Left>
+" remove all blank line
+nnoremap M :g/^\s*$/d
 
+" this is for neovide
+set guifont=Fira\ Code:h12
+colorscheme default
+set notermguicolors
+highlight Search ctermfg=0
