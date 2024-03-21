@@ -1,3 +1,5 @@
 ./.config/nvim/.gitignore
 ./.config/nvim/.github/*
 ./.config/nvim/.git/*
+
+.config/lvim/lazy-lock.json
