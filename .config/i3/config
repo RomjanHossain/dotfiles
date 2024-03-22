@@ -553,7 +553,8 @@ bar {
     # i3bar_command i3bar --transparency
     colors {
       separator          $purple
-      background         $darkgrey
+      background         #202020
+      # background         $darkgrey
       statusline         $white
 #                          		border 		        bg		txt		indicator
       focused_workspace	$mediumgrey	   	$grey		$darkgrey	$purple
