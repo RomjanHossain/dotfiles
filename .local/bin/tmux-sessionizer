@@ -3,7 +3,7 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(find /media/Linux/Programming/Flutter  ~/Downloads/ ~/  -mindepth 1 -maxdepth 1 -type d | fzf)
+    selected=$(find /media/Linux/Programming/Flutter  ~/Downloads/ ~/ ~/.config /media/Linux/Anime /media/Linux/Course /media/Linux/Entertainment /media/Linux/Dumb Exam/BUBT/ /media/Linux/self/ /media/Linux/Torrent/ /media/Linux/Jobs  /media/Linux/Cartoon -mindepth 1 -maxdepth 1 -type d | fzf)
 fi
 
 if [[ -z $selected ]]; then
