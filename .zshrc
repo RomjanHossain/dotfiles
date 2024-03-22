@@ -93,7 +93,7 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
-
+source ~/.zsh_profile
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
