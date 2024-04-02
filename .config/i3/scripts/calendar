@@ -23,18 +23,29 @@ while getopts ":f:W:H:" opt; do
 done
 
 case "$BLOCK_BUTTON" in
-  1|2|3) 
+    1|2|3) 
+        # Get screen width and height
+        SCREEN_WIDTH=$(xdpyinfo | awk '/dimensions:/ {print $2}' | cut -d 'x' -f 1)
+        SCREEN_HEIGHT=$(xdpyinfo | awk '/dimensions:/ {print $2}' | cut -d 'x' -f 2)
 
-	# the position of the upper left corner of the popup
-	posX=$(($BLOCK_X - $WIDTH / 2))
-	posY=$(($BLOCK_Y - $HEIGHT))
+        # Calculate position
+        BLOCK_HEIGHT=20  # Adjust according to your i3blocks bar height
+        BLOCK_X=$(($BLOCK_X + 10))  # Adjust according to your preference
+        BLOCK_Y=$(($BLOCK_Y + $BLOCK_HEIGHT))  # Adjust according to your preference
+        SPACE=25  # Adjust according to your preference
 
-	i3-msg -q "exec yad --calendar \
-        --width=$WIDTH --height=$HEIGHT \
-	    --undecorated --fixed \
-	    --close-on-unfocus --no-buttons \
-	    --posx=$posX --posy=$posY \
-	    > /dev/null"
+        posX=$(($SCREEN_WIDTH - $WIDTH - $SPACE))
+        posY=$(($BLOCK_Y))  # Adjust according to your preference
+
+        # the position of the upper right corner of the popup
+        yad --calendar \
+            --width=$WIDTH --height=$HEIGHT \
+            --undecorated --fixed \
+            --close-on-unfocus --no-buttons \
+            --posx=$posX --posy=$posY \
+            > /dev/null &
+    ;;
 esac
+
 echo "$LABEL$(date "$DATEFMT")"
 echo "$LABEL$(date "$SHORTFMT")"
