@@ -1,0 +1,60 @@
+#!/bin/bash
+
+# Set default value for the overwrite option
+overwrite_option="-overwrite_original"
+edit_metadata=false
+
+# Check for flags
+while getopts "ke" opt; do
+    case ${opt} in
+        k )
+            overwrite_option=""
+            ;;
+        e )
+            edit_metadata=true
+            ;;
+        \? )
+            echo "Usage: $0 [-k] [-e]"
+            exit 1
+            ;;
+    esac
+done
+shift $((OPTIND -1))
+
+# Function to edit metadata using an editor
+edit_metadata() {
+    file="$1"
+    temp_file=$(mktemp)  # Create a temporary file to store metadata
+    exiftool "$file" > "$temp_file"  # Save metadata to the temporary file
+    editor="${EDITOR:-vi}"  # Default to vi if EDITOR environment variable is not set
+    $editor "$temp_file"  # Open the temporary file in the editor
+    # Check if the metadata was edited
+    if ! cmp -s "$file" "$temp_file"; then
+        echo "Metadata has been edited. Saving changes..."
+        # Apply the edited metadata to the original file
+        exiftool -overwrite_original_in_place -r "-TagsFromFile@$temp_file" "$file"
+        echo "Changes saved."
+    else
+        echo "No changes made to metadata."
+    fi
+    rm "$temp_file"  # Remove the temporary file
+}
+
+# Get the list of files in the current directory
+files=$(ls)
+
+# Iterate over each file
+for file in $files
+do
+    # Check if the item is a file
+    if [ -f "$file" ]; then
+        # Edit metadata if the flag is specified
+        if $edit_metadata; then
+            edit_metadata "$file"
+        fi
+
+        # Use exiftool command to clear metadata
+        exiftool -all= "$overwrite_option" "$file"
+        echo "Metadata cleared for $file"
+    fi
+done
