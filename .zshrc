@@ -156,3 +156,10 @@ typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 export HISTCONTROLER="ignoreboth"
 # for zoxide
 eval "$(zoxide init zsh)"
+
+autoload -Uz compinit
+zstyle ':completion:*' menu select
+fpath+=~/.zfunc
+
+
+
