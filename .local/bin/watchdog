@@ -1,0 +1,68 @@
+#!/bin/python3
+
+import os
+import time
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+
+
+class ImageFileHandler(FileSystemEventHandler):
+    def on_created(self, event):
+        if event.is_directory:
+            return
+
+        file_path = event.src_path
+        _, extension = os.path.splitext(file_path)
+
+        if extension.lower() in [".jpg", ".png", ".jpeg"]:
+            self.rename_image(file_path)
+
+    def rename_image(self, file_path):
+        folder_path, file_name = os.path.split(file_path)
+        _, extension = os.path.splitext(file_name)
+
+        new_name = self.get_new_name(folder_path)
+        new_path = os.path.join(folder_path, f"{new_name}{extension}")
+
+        os.rename(file_path, new_path)
+        print(f"Renamed: {file_name} to {new_name}{extension}")
+
+    def get_new_name(self, folder_path):
+        existing_files = [
+            f
+            for f in os.listdir(folder_path)
+            if os.path.isfile(os.path.join(folder_path, f))
+        ]
+        used_numbers = set()
+
+        for file_name in existing_files:
+            name, _ = os.path.splitext(file_name)
+            try:
+                used_numbers.add(int(name))
+            except ValueError:
+                pass
+
+        new_name = 1
+        while new_name in used_numbers:
+            new_name += 1
+
+        return new_name
+
+
+def watch_folder(folder_path):
+    event_handler = ImageFileHandler()
+    observer = Observer()
+    observer.schedule(event_handler, path=folder_path, recursive=False)
+    observer.start()
+
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+
+    observer.join()
+
+if __name__ == "__main__":
+    folder_to_watch = os.getcwd()
+    watch_folder(folder_to_watch)
