@@ -49,11 +49,40 @@ lvim.builtin.treesitter.highlight.enabled = true
 
 
 
+local formatters = require "lvim.lsp.null-ls.formatters"
+formatters.setup {
+  { name = "black" },
+  {
+    name = "prettier",
+    ---@usage arguments to pass to the formatter
+    -- these cannot contain whitespace
+    -- options such as `--line-width 80` become either `{"--line-width", "80"}` or `{"--line-width=80"}`
+    args = { "--print-width", "100" },
+    ---@usage only start in these filetypes, by default it will attach to all filetypes it supports
+    filetypes = { "typescript", "typescriptreact" },
+  },
+}
 
+local linters = require "lvim.lsp.null-ls.linters"
+linters.setup {
+  { name = "flake8" },
+  {
+    name = "shellcheck",
+    args = { "--severity", "warning" },
+  },
+}
 
 
 -- Additional Plugins
 lvim.plugins = {
+  {
+    "tpope/vim-surround",
+
+    -- make sure to change the value of `timeoutlen` if it's not triggering correctly, see https://github.com/tpope/vim-surround/issues/117
+    -- setup = function()
+    --  vim.o.timeoutlen = 500
+    -- end
+  },
   -- bloc plugin
   -- {
   --   'eliasreis54/vim-bloc-plugin'
@@ -160,9 +189,27 @@ lvim.plugins = {
     "tiagovla/tokyodark.nvim",
   },
 
+  -- for nextjs
+  {
+    "windwp/nvim-ts-autotag",
+    config = function()
+      require("nvim-ts-autotag").setup()
+    end,
+  },
+  {
+    "JoosepAlviste/nvim-ts-context-commentstring",
+    event = "BufRead",
+  },
+  {
+    "mrjones2014/nvim-ts-rainbow",
+  },
+  -- -- snippets nextjs
+  -- { "avneesh0612/react-nextjs-snippets" },
+
 
 }
-
+-- for rainbow parameter
+lvim.builtin.treesitter.rainbow.enable = true
 
 -- goto preview settings
 vim.cmd("nnoremap gpd <cmd>lua require('goto-preview').goto_preview_definition()<CR>")      -- PERF:: goto preview defination
