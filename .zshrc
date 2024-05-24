@@ -83,6 +83,7 @@ plugins=(
   archlinux
 	git
   fzf
+  fzf-tab
   history-substring-search
 	zsh-syntax-highlighting
 	zsh-autosuggestions
