@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Function to change the keyboard layout
+change_layout() {
+    case $1 in
+        1)
+            setxkbmap us
+            echo "Keyboard layout changed to QWERTY (US)"
+            ;;
+        2)
+            setxkbmap us dvorak
+            echo "Keyboard layout changed to Dvorak"
+            ;;
+        3)
+            setxkbmap us colemak
+            echo "Keyboard layout changed to Colemak"
+            ;;
+        4)
+            setxkbmap us colemak_dh
+            echo "Keyboard layout changed to Colemak-DH"
+            ;;
+        5)
+            setxkbmap us workman
+            echo "Keyboard layout changed to Workman"
+            ;;
+        *)
+            echo "Invalid option. Exiting."
+            exit 1
+            ;;
+    esac
+}
+
+# Display options
+echo "Select a keyboard layout:"
+echo "1. QWERTY"
+echo "2. Dvorak"
+echo "3. Colemak"
+echo "4. Colemak-DH"
+echo "5. Workman"
+
+# Read user input
+read -p "Enter your choice (1-6): " choice
+
+# Change keyboard layout based on user input
+change_layout $choice

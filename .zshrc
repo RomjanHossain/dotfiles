@@ -91,6 +91,7 @@ plugins=(
   flutter
   extract
   command-not-found
+  colemak
 )
 
 source $ZSH/oh-my-zsh.sh
