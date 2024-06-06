@@ -16,7 +16,7 @@ change_layout() {
             echo "Keyboard layout changed to Colemak"
             ;;
         4)
-            setxkbmap us colemak_dh
+            setxkbmap us colemak_dh_ortho
             echo "Keyboard layout changed to Colemak-DH"
             ;;
         5)
