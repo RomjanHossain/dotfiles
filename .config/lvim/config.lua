@@ -283,12 +283,23 @@ vim.g.dart_format_on_save = 1
 
 
 -- for colemak layout
+-- Colemak hjkl hack
+-- nnoremap <M-h> <Left>|
+-- nnoremap <M-n> <Down>|
+-- nnoremap <M-e> <Up>|
+-- nnoremap <M-i> <Right>|
+vim.cmd("nnoremap <M-m> <Left>|")
+vim.cmd("nnoremap <M-n> <Down>|")
+vim.cmd("nnoremap <M-e> <Up>|")
+vim.cmd("nnoremap <M-i> <Right>|")
 -- lvim.keys.normal_mode["d"] = "g"
 -- lvim.keys.normal_mode["e"] = "k"
+--
+--
 -- lvim.keys.normal_mode["f"] = "e"
 -- lvim.keys.normal_mode["g"] = "t"
 -- lvim.keys.normal_mode["i"] = "l"
--- lvim.keys.normal_mode["j"] = "y"
+-- lvim.keys.normal_mode[iii"j"] = "y"
 -- lvim.keys.normal_mode["k"] = "n"
 -- lvim.keys.normal_mode["l"] = "u"
 -- lvim.keys.normal_mode["n"] = "j"
