@@ -1,0 +1,38 @@
+#!/bin/bash
+
+KEYMAP_DIRECTORY='/usr/share/kbd/keymaps'
+
+# Get the current XKB layout and variant
+XKBMAP_OUTPUT=$(setxkbmap -query)
+CURRENT_LAYOUT=$(echo "${XKBMAP_OUTPUT}" | grep "layout" | awk -F ':' '{print $2}' | tr -d ' ')
+CURRENT_VARIANT=$(echo "${XKBMAP_OUTPUT}" | grep "variant" | awk -F ':' '{print $2}' | tr -d ' ')
+
+# If no layout is set, exit with an error
+if [[ -z "${CURRENT_LAYOUT}" ]]; then
+  echo "No layout is set."
+  exit 1
+fi
+
+# Form the pattern to search for the keymap file
+KEYMAP_PATTERN="${CURRENT_LAYOUT}*"
+
+if [[ -n "${CURRENT_VARIANT}" ]]; then
+  KEYMAP_PATTERN="${KEYMAP_PATTERN}${CURRENT_VARIANT}*"
+fi
+
+# Find the keymap file recursively
+FOUND_FILE=$(find "${KEYMAP_DIRECTORY}" -type f -name "${KEYMAP_PATTERN}" -print -quit)
+
+if [[ -n "${FOUND_FILE}" ]]; then
+  # Extract the directory name and basename
+  FOUND_KEYMAP=$(basename "$(dirname "${FOUND_FILE}")")
+  
+  if [[ -n "${FOUND_KEYMAP}" ]]; then
+    echo "${FOUND_KEYMAP}"
+    echo "${FOUND_KEYMAP}"
+    echo ""
+  fi
+else
+  echo "No matching keymap file found."
+  exit 1
+fi

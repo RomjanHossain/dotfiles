@@ -46,6 +46,7 @@ play = [
 [open]
 rules = [
 	{ name = "*/", use = [ "edit", "open", "reveal" ] },
+  {name= "*.ts", use=["play","open"]},
 
 	{ mime = "text/*",          use = [ "edit", "reveal" ] },
 	{ mime = "image/*",         use = [ "open", "reveal" ] },

@@ -4,6 +4,7 @@
 
 [manager]
 
+
 keymap = [
 	{ on = [ "<Esc>" ], run = "escape",             desc = "Exit visual mode, clear selected, or cancel search" },
 	{ on = [ "<C-[>" ], run = "escape",             desc = "Exit visual mode, clear selected, or cancel search" },
@@ -313,3 +314,19 @@ keymap = [
 	# Filtering
 	{ on = [ "/" ], run = "filter", desc = "Apply a filter for the help items" },
 ]
+
+
+[[manager.prepend_keymap]]
+on   = [ "<C-s>" ]
+run  = 'shell "$SHELL" --block --confirm'
+desc = "Open shell here"
+
+[[input.prepend_keymap]]
+on   = [ "<Esc>" ]
+run  = "close"
+desc = "Cancel input"
+
+[[manager.prepend_keymap]]
+on   = [ "i" ]
+run  = "plugin --sync smart-enter"
+desc = "Enter the child directory, or open the file"
