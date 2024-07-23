@@ -379,6 +379,7 @@ for_window [class=TelegramDesktop] focus
 #
 # for custom config:
 exec_always --no-startup-id picom --config  ~/.config/picom.conf
+exec --no-startup-id /usr/lib/pam_kwallet_init
 
 #############################################
 # autostart applications/services on login: #
