@@ -28,8 +28,10 @@ ueberzug_offset = [ 0, 0, 0, 0 ]
 edit = [
 	{ run = 'lvim "$@"', desc = "$EDITOR", block = true, for = "unix" },
 ]
+
 open = [
 	{ run = 'xdg-open "$@"',                desc = "Open", for = "linux" },
+	{ run = 'brave "$@"',                desc = "Brave Bro", for = "linux" },
 ]
 reveal = [
 	{ run = 'xdg-open "$(dirname "$0")"',            desc = "Reveal", for = "linux" },
@@ -47,6 +49,7 @@ play = [
 rules = [
 	{ name = "*/", use = [ "edit", "open", "reveal" ] },
   {name= "*.ts", use=["play","open"]},
+  {name= "*.html", use=["edit","open"]},
 
 	{ mime = "text/*",          use = [ "edit", "reveal" ] },
 	{ mime = "image/*",         use = [ "open", "reveal" ] },
