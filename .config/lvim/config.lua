@@ -93,12 +93,18 @@ lvim.plugins = {
   {
     'dart-lang/dart-vim-plugin'
   },
-  {
-    'akinsho/flutter-tools.nvim',
-    config = function()
-      require("flutter-tools").setup {} -- use defaults
-    end
-  },
+  -- {
+  --   'akinsho/flutter-tools.nvim',
+  --   -- config = function()
+  --   --   require("flutter-tools").setup {} -- use defaults
+  --   -- end
+  --   lazy = false,
+  --   dependencies = {
+  --     'nvim-lua/plenary.nvim',
+  --     'stevearc/dressing.nvim', -- optional for vim.ui.select
+  --   },
+  --   config = true,
+  -- },
   -- {
   --   'lewis6991/hover.nvim',
   --   config = function()
@@ -155,7 +161,40 @@ lvim.plugins = {
   -- trouble (plugin)
   {
     "folke/trouble.nvim",
-    cmd = "TroubleToggle",
+    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    cmd = "Trouble",
+    keys = {
+      {
+        "<leader>xx",
+        "<cmd>Trouble diagnostics toggle<cr>",
+        desc = "Diagnostics (Trouble)",
+      },
+      {
+        "<leader>xX",
+        "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+        desc = "Buffer Diagnostics (Trouble)",
+      },
+      {
+        "<leader>cs",
+        "<cmd>Trouble symbols toggle focus=false<cr>",
+        desc = "Symbols (Trouble)",
+      },
+      {
+        "<leader>cl",
+        "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+        desc = "LSP Definitions / references / ... (Trouble)",
+      },
+      {
+        "<leader>xL",
+        "<cmd>Trouble loclist toggle<cr>",
+        desc = "Location List (Trouble)",
+      },
+      {
+        "<leader>xQ",
+        "<cmd>Trouble qflist toggle<cr>",
+        desc = "Quickfix List (Trouble)",
+      },
+    },
   },
   -- lsp lsp_signature (hint when you tryp)
   {
@@ -189,6 +228,25 @@ lvim.plugins = {
     "tiagovla/tokyodark.nvim",
   },
 
+
+  {
+    'nvim-flutter/flutter-tools.nvim',
+    lazy = false,
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'stevearc/dressing.nvim', -- optional for vim.ui.select
+    },
+    config = true,
+  },
+  {
+    'akinsho/pubspec-assist.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    -- config = function()
+    --   require('pubspec-assist').setup()
+    -- end,
+  },
   -- for nextjs
   {
     "windwp/nvim-ts-autotag",
@@ -205,9 +263,83 @@ lvim.plugins = {
   },
   -- -- snippets nextjs
   -- { "avneesh0612/react-nextjs-snippets" },
-
+  -- line jump
+  {
+    "nacro90/numb.nvim",
+    event = "BufRead",
+    config = function()
+      require("numb").setup {
+        show_numbers = true,    -- Enable 'number' for the window while peeking
+        show_cursorline = true, -- Enable 'cursorline' for the window while peeking
+      }
+    end,
+  },
+  -- better quickfix window
+  {
+    "kevinhwang91/nvim-bqf",
+    event = { "BufRead", "BufNew" },
+    config = function()
+      require("bqf").setup({
+        auto_enable = true,
+        preview = {
+          win_height = 12,
+          win_vheight = 12,
+          delay_syntax = 80,
+          border_chars = { "┃", "┃", "━", "━", "┏", "┓", "┗", "┛", "█" },
+        },
+        func_map = {
+          vsplit = "",
+          ptogglemode = "z,",
+          stoggleup = "",
+        },
+        filter = {
+          fzf = {
+            action_for = { ["ctrl-s"] = "split" },
+            extra_opts = { "--bind", "ctrl-o:toggle-all", "--prompt", "> " },
+          },
+        },
+      })
+    end,
+  },
+  -- file tree
+  -- {
+  --   "nvim-neo-tree/neo-tree.nvim",
+  --   branch = "v2.x",
+  --   dependencies = {
+  --     "nvim-lua/plenary.nvim",
+  --     "nvim-tree/nvim-web-devicons",
+  --     "MunifTanjim/nui.nvim",
+  --   },
+  --   config = function()
+  --     require("neo-tree").setup({
+  --       close_if_last_window = true,
+  --       window = {
+  --         width = 30,
+  --       },
+  --       buffers = {
+  --         follow_current_file = true,
+  --       },
+  --       filesystem = {
+  --         follow_current_file = true,
+  --         filtered_items = {
+  --           hide_dotfiles = false,
+  --           hide_gitignored = false,
+  --           hide_by_name = {
+  --             "node_modules"
+  --           },
+  --           never_show = {
+  --             ".DS_Store",
+  --             "thumbs.db"
+  --           },
+  --         },
+  --       },
+  --     })
+  --   end
+  -- },
 
 }
+-- for use the neotree
+-- lvim.builtin.nvimtree.active = false -- NOTE: using neo-tree
 -- for rainbow parameter
 lvim.builtin.treesitter.rainbow.enable = true
 
@@ -261,16 +393,6 @@ lvim.builtin.which_key.mappings["F"] = {
   v = { ":FlutterVisualDebug<CR>", "Visual Debug" },
 }
 
--- trouble plugins
-lvim.builtin.which_key.mappings["t"] = {
-  name = "Diagnostics",
-  t = { "<cmd>TroubleToggle<cr>", "trouble" },
-  w = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "workspace" },
-  d = { "<cmd>TroubleToggle document_diagnostics<cr>", "document" },
-  q = { "<cmd>TroubleToggle quickfix<cr>", "quickfix" },
-  l = { "<cmd>TroubleToggle loclist<cr>", "loclist" },
-  r = { "<cmd>TroubleToggle lsp_references<cr>", "references" },
-}
 
 
 -- vim.opt.guifont = { "fira code", "h10" }
@@ -288,41 +410,39 @@ vim.g.dart_format_on_save = 1
 -- nnoremap <M-n> <Down>|
 -- nnoremap <M-e> <Up>|
 -- nnoremap <M-i> <Right>|
+-- Remap Colemak-DH movement keys (mnei -> hjkl)
+-- vim.api.nvim_set_keymap('n', 'm', 'h', { noremap = true, silent = true }) -- m -> h
+-- vim.api.nvim_set_keymap('n', 'n', 'j', { noremap = true, silent = true }) -- n -> j
+-- vim.api.nvim_set_keymap('n', 'e', 'k', { noremap = true, silent = true }) -- e -> k
+-- vim.api.nvim_set_keymap('n', 'i', 'l', { noremap = true, silent = true }) -- i -> l
+
+-- vim.api.nvim_set_keymap('v', 'm', 'h', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('v', 'n', 'j', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('v', 'e', 'k', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('v', 'i', 'l', { noremap = true, silent = true })
+
+-- vim.api.nvim_set_keymap('o', 'm', 'h', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('o', 'n', 'j', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('o', 'e', 'k', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('o', 'i', 'l', { noremap = true, silent = true })
+
+-- -- Remap QWERTY movement keys (hjkl -> mnei)
+-- vim.api.nvim_set_keymap('n', 'h', 'm', { noremap = true, silent = true }) -- h -> m
+-- vim.api.nvim_set_keymap('n', 'j', 'n', { noremap = true, silent = true }) -- j -> n
+-- vim.api.nvim_set_keymap('n', 'k', 'e', { noremap = true, silent = true }) -- k -> e
+-- vim.api.nvim_set_keymap('n', 'l', 'i', { noremap = true, silent = true }) -- l -> i
+
+-- vim.api.nvim_set_keymap('v', 'h', 'm', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('v', 'j', 'n', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('v', 'k', 'e', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('v', 'l', 'i', { noremap = true, silent = true })
+
+-- vim.api.nvim_set_keymap('o', 'h', 'm', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('o', 'j', 'n', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('o', 'k', 'e', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('o', 'l', 'i', { noremap = true, silent = true })
+
 vim.cmd("nnoremap <M-m> <Left>|")
 vim.cmd("nnoremap <M-n> <Down>|")
 vim.cmd("nnoremap <M-e> <Up>|")
 vim.cmd("nnoremap <M-i> <Right>|")
--- lvim.keys.normal_mode["d"] = "g"
--- lvim.keys.normal_mode["e"] = "k"
---
---
--- lvim.keys.normal_mode["f"] = "e"
--- lvim.keys.normal_mode["g"] = "t"
--- lvim.keys.normal_mode["i"] = "l"
--- lvim.keys.normal_mode[iii"j"] = "y"
--- lvim.keys.normal_mode["k"] = "n"
--- lvim.keys.normal_mode["l"] = "u"
--- lvim.keys.normal_mode["n"] = "j"
--- lvim.keys.normal_mode["o"] = "p"
--- lvim.keys.normal_mode["p"] = "r"
--- lvim.keys.normal_mode["r"] = "s"
--- lvim.keys.normal_mode["s"] = "d"
--- lvim.keys.normal_mode["t"] = "f"
--- lvim.keys.normal_mode["u"] = "i"
--- lvim.keys.normal_mode["y"] = "o"
--- lvim.keys.normal_mode["D"] = "G"
--- lvim.keys.normal_mode["E"] = "K"
--- lvim.keys.normal_mode["F"] = "E"
--- lvim.keys.normal_mode["G"] = "T"
--- lvim.keys.normal_mode["I"] = "L"
--- lvim.keys.normal_mode["J"] = "Y"
--- lvim.keys.normal_mode["K"] = "N"
--- lvim.keys.normal_mode["L"] = "U"
--- lvim.keys.normal_mode["N"] = "J"
--- lvim.keys.normal_mode["O"] = "P"
--- lvim.keys.normal_mode["P"] = "R"
--- lvim.keys.normal_mode["R"] = "S"
--- lvim.keys.normal_mode["S"] = "D"
--- lvim.keys.normal_mode["T"] = "F"
--- lvim.keys.normal_mode["U"] = "I"
--- lvim.keys.normal_mode["Y"] = "O"
