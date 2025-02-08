@@ -137,6 +137,8 @@ alias lv=lvim
 alias rr=ranger
 alias ytd=yt-dlp
 alias whatismyip="curl ipinfo.io"
+alias wrapup="sudo wg-quick up wgcf-profile"
+alias wrapdown="sudo wg-quick down wgcf-profile"
 
 
 # for lunarvim
@@ -163,4 +165,7 @@ autoload -Uz compinit
 zstyle ':completion:*' menu select
 fpath+=~/.zfunc
 
+
+# man page in vim
+export MANPAGER="nvim +Man!"
 
