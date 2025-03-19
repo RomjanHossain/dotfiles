@@ -6,6 +6,9 @@ lvim.colorscheme = "onedarker"
 lvim.transparent_window = false
 -- keymappings [view all the defaults by pressing <leader>Lk]
 lvim.leader = "space"
+-- split window
+lvim.keys.normal_mode["|"] = ":vsplit<CR>"
+lvim.keys.normal_mode["-"] = ":split<CR>"
 -- add your own keymapping
 lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 lvim.keys.normal_mode["<S-l>"] = ":BufferLineCycleNext<CR>"
@@ -204,7 +207,6 @@ lvim.plugins = {
   },
   -- neoscroll
   {
-
     "karb94/neoscroll.nvim",
     event = "WinScrolled",
     config = function()
