@@ -12,7 +12,7 @@ local log = {
   dump = function(item, ignore)
     if "table" ~= type(item) then
       msg.info(tostring(item))
-      return 
+      return
     end
     local count = 1
     local tablecount = 1
@@ -66,7 +66,7 @@ local utils = require('mp.utils')
 local script_name = 'torque-progressbar'
 mp.get_osd_size = mp.get_osd_size or mp.get_screen_size
 local settings = {
-  _defaults = { }
+  _defaults = {}
 }
 local settingsMeta = {
   _reload = function(self)
@@ -137,7 +137,7 @@ local settingsMeta = {
     }
     local oldConfigFiles
     do
-      local _accum_0 = { }
+      local _accum_0 = {}
       local _len_0 = 1
       for _index_0 = 1, #settingsDirectories do
         local dir = settingsDirectories[_index_0]
@@ -148,7 +148,7 @@ local settingsMeta = {
     end
     local newConfigFiles
     do
-      local _accum_0 = { }
+      local _accum_0 = {}
       local _len_0 = 1
       for _index_0 = 1, #settingsDirectories do
         local dir = settingsDirectories[_index_0]
@@ -172,7 +172,7 @@ local settingsMeta = {
     end
     if not (oldConfig) then
       log.debug('No old config file found. Migration finished.')
-      return 
+      return
     end
     for _index_0 = 1, #newConfigFiles do
       local file = newConfigFiles[_index_0]
@@ -194,14 +194,14 @@ local settingsMeta = {
       local dirExists = mp.find_config_file(configDir)
       if dirExists and not utils.readdir(configDir) then
         log.warn(('Configuration migration failed. "%s" exists and does not appear to be a folder'):format(configDir))
-        return 
+        return
       else
         if not dirExists then
           log.debug(('Attempting to create directory "%s"'):format(configDir))
           local res = mkdir(configDir)
           if res.error or res.status ~= 0 then
             log.warn(('Making directory "%s" failed.'):format(configDir))
-            return 
+            return
           end
           log.debug('successfully created directory.')
         else
@@ -212,7 +212,7 @@ local settingsMeta = {
       local res = mv(oldConfig, newConfig)
       if res.error or res.status ~= 0 then
         log.warn(('Moving file "%s" -> "%s" failed.'):format(oldConfig, newConfig))
-        return 
+        return
       end
       if mp.find_config_file(newConfigFile) then
         return log.info('Configuration successfully migrated.')
@@ -229,7 +229,7 @@ local settingsMeta = {
 settingsMeta.__index = settingsMeta
 setmetatable(settings, settingsMeta)
 settings:_migrate()
-local helpText = { }
+local helpText = {}
 settings['hover-zone-height'] = 40
 helpText['hover-zone-height'] = [[Sets the height of the rectangular area at the bottom of the screen that expands
 the progress bar and shows playback time information when the mouse is hovered
@@ -317,13 +317,13 @@ bar, allowing the display of seek ranges that have already been encountered.
 demuxer cache ranges that are prior to the current playback point will not be
 shown. This matches the previous behavior.
 ]]
-settings['bar-cache-height-inactive'] = 1.5
+settings['bar-cache-height-inactive'] = 3
 helpText['bar-cache-height-inactive'] = [[Sets the height of the cache bar display when the mouse is not in the active
 zone and there is no request-display active. Useful in combination with bar-
 cache-position to control whether or not the cache bar is occluded by (or
 occludes) the progress bar.
 ]]
-settings['bar-cache-height-active'] = 4
+settings['bar-cache-height-active'] = 8
 helpText['bar-cache-height-active'] = [[Sets the height of the cache bar display when the mouse is in the active zone or
 request-display is active. Useful in combination with bar-cache- position to
 control whether or not the cache bar is occluded by (or occludes) the progress
@@ -338,12 +338,12 @@ settings['bar-foreground-style'] = ''
 helpText['bar-foreground-style'] = [[A string of ASS override tags that get applied only to the progress layer of the
 bar.
 ]]
-settings['bar-cache-style'] = [[\c&H515151&]]
+settings['bar-cache-style'] = [[\c&HFDAFC8&]]
 helpText['bar-cache-style'] = [[A string of ASS override tags that get applied only to the cache layer of the
 bar, particularly the part of the cache bar that is behind the current playback
 position. The default sets only the color.
 ]]
-settings['bar-cache-background-style'] = [[]]
+settings['bar-cache-background-style'] = [[\c&H525252&]]
 helpText['bar-cache-background-style'] = [[A string of ASS override tags that get applied only to the cache layer of the
 bar, particularly the part of the cache bar that is after the current playback
 position. The tags specified here are applied after bar-cache-style and override
@@ -411,17 +411,23 @@ settings['enable-thumbnail'] = true
 helpText['enable-thumbnail'] = [[Sets whether or not thumbnails are displayed at all. Note: thumbnail display
 requires use of the thumbfast script (See: https://github.com/po5/thumbfast).
 ]]
-settings['thumbnail-left-margin'] = 10
+settings['thumbnail-left-margin'] = 4
 helpText['thumbnail-left-margin'] = [[Controls how close to the left edge of the window the thumbnail display can
 get.
 ]]
-settings['thumbnail-right-margin'] = 10
+settings['thumbnail-right-margin'] = 4
 helpText['thumbnail-right-margin'] = [[Controls how close to the right edge of the window the thumbnail display can
 get.
 ]]
 settings['thumbnail-bottom-margin'] = 40
 helpText['thumbnail-bottom-margin'] = [[Controls how far above the expanded progress bar the thumbnail display is
 positioned.
+]]
+settings['thumbnail-border-expansion'] = 3
+helpText['thumbnail-border-expansion'] = [[Controls the thickness of the thumbnail border box.
+]]
+settings['thumbnail-border-style'] = [[\c&H2D2D2D&\bord0]]
+helpText['thumbnail-border-style'] = [[Controls the style of the thumbnail border box.
 ]]
 settings['enable-title'] = true
 helpText['enable-title'] = [[Sets whether or not the video title is displayed at all.
@@ -464,11 +470,13 @@ helpText['pause-indicator'] = [[Sets whether or not the pause indicator is displ
 momentary icon that flashes in the middle of the screen, similar to youtube.
 ]]
 settings['pause-indicator-foreground-style'] = [[\c&HFC799E&]]
-helpText['pause-indicator-foreground-style'] = [[A string of ASS override tags that get applied only to the foreground of the
+helpText['pause-indicator-foreground-style'] =
+[[A string of ASS override tags that get applied only to the foreground of the
 pause indicator.
 ]]
 settings['pause-indicator-background-style'] = [[\c&H2D2D2D&]]
-helpText['pause-indicator-background-style'] = [[A string of ASS override tags that get applied only to the background of the
+helpText['pause-indicator-background-style'] =
+[[A string of ASS override tags that get applied only to the background of the
 pause indicator.
 ]]
 settings['enable-chapter-markers'] = true
@@ -477,6 +485,16 @@ the way the chapter markers are currently implemented, videos with a large
 number of chapters may slow down the script somewhat, but I have yet to run
 into this being a problem.
 ]]
+settings['enable-chapter-seek'] = false
+helpText['enable-chapter-seek'] = [[If enabled and the item being played back has chapters, using the
+`chapter-seek-button` while the progress bar is hovered will seek the video to
+the chapter that is closest to the mouse cursor's position.
+]]
+settings['chapter-seek-button'] = 'MBTN_RIGHT'
+helpText['chapter-seek-button'] = [[The button to register for chapter seeking, if enabled. Since chapter seeking
+is based on the mouse position, this should probably be bound to a mouse button,
+but it doesn't have to be.
+]]
 settings['chapter-marker-width'] = 2
 helpText['chapter-marker-width'] = [[Controls the width of each chapter marker when the progress bar is inactive.
 ]]
@@ -484,17 +502,20 @@ settings['chapter-marker-width-active'] = 4
 helpText['chapter-marker-width-active'] = [[Controls the width of each chapter marker when the progress bar is active.
 ]]
 settings['chapter-marker-active-height-fraction'] = 1
-helpText['chapter-marker-active-height-fraction'] = [[Modifies the height of the chapter markers when the progress bar is active. Acts
+helpText['chapter-marker-active-height-fraction'] =
+[[Modifies the height of the chapter markers when the progress bar is active. Acts
 as a multiplier on the height of the active progress bar. A value greater than 1
 will cause the markers to be taller than the expanded progress bar, whereas a
 value less than 1 will cause them to be shorter.
 ]]
 settings['chapter-marker-before-style'] = [[\c&HFC799E&]]
-helpText['chapter-marker-before-style'] = [[A string of ASS override tags that get applied only to chapter markers that have
+helpText['chapter-marker-before-style'] =
+[[A string of ASS override tags that get applied only to chapter markers that have
 not yet been passed.
 ]]
 settings['chapter-marker-after-style'] = [[\c&H2D2D2D&]]
-helpText['chapter-marker-after-style'] = [[A string of ASS override tags that get applied only to chapter markers that have
+helpText['chapter-marker-after-style'] =
+[[A string of ASS override tags that get applied only to chapter markers that have
 already been passed.
 ]]
 settings['request-display-duration'] = 1
@@ -565,6 +586,15 @@ do
         element[self.containmentKey] = true
       end
     end,
+    insertBefore = function(self, new, existing)
+      local index = existing[self]
+      if index then
+        self:insert(new, index)
+        return reindex(self, index + 1)
+      else
+        return self:insert(new)
+      end
+    end,
     remove = function(self, element)
       if element[self] == nil then
         error("Trying to remove an element that doesn't exist in this stack.")
@@ -582,7 +612,7 @@ do
     end,
     removeSortedList = function(self, elementList)
       if #elementList < 1 then
-        return 
+        return
       end
       for i = 1, #elementList - 1 do
         local element = table.remove(elementList)
@@ -637,7 +667,7 @@ end
 local Window
 do
   local _class_0
-  local _base_0 = { }
+  local _base_0 = {}
   _base_0.__index = _base_0
   _class_0 = setmetatable({
     __init = function() end,
@@ -674,7 +704,7 @@ local Mouse
 do
   local _class_0
   local scaledPosition
-  local _base_0 = { }
+  local _base_0 = {}
   _base_0.__index = _base_0
   _class_0 = setmetatable({
     __init = function() end,
@@ -698,7 +728,7 @@ do
   scaledPosition = function(self)
     local x, y = mp.get_mouse_pos()
     self._rawX, self._rawY = x, y
-    return math.floor(x / Window.osdScale), math.floor(y / Window.osdScale)
+    return x / Window.osdScale, y / Window.osdScale
   end
   self.update = function(self)
     local oldX, oldY = self.x, self.y
@@ -706,33 +736,39 @@ do
     if self.dead and (oldX ~= self.x or oldY ~= self.y) then
       self.dead = false
     end
-    if not self.dead and self.clickPending then
+    if not self.dead and self.clickPending ~= false then
+      local button = self.clickPending
       self.clickPending = false
-      return true
+      return button
     end
     return false
   end
-  self.cacheClick = function(self)
+  self.cacheClick = function(self, button)
     if not self.dead then
       self.clickX, self.clickY = scaledPosition(self)
-      self.clickPending = true
+      self.clickPending = button
     else
       self.dead = false
     end
   end
   Mouse = _class_0
 end
-mp.add_key_binding("mouse_btn0", "left-click", function()
-  return Mouse:cacheClick()
+mp.add_key_binding('MBTN_LEFT', 'left-click', function()
+  return Mouse:cacheClick(0)
 end)
+if settings['enable-chapter-seek'] then
+  mp.add_key_binding(settings['chapter-seek-button'], 'chapter-seek-click', function()
+    return Mouse:cacheClick(2)
+  end)
+end
 mp.observe_property('fullscreen', 'bool', function()
   Mouse:update()
   Mouse.dead = true
 end)
-mp.add_forced_key_binding("mouse_leave", "mouse-leave", function()
+mp.add_forced_key_binding('mouse_leave', 'mouse-leave', function()
   Mouse.inWindow = false
 end)
-mp.add_forced_key_binding("mouse_enter", "mouse-enter", function()
+mp.add_forced_key_binding('mouse_enter', 'mouse-enter', function()
   Mouse.inWindow = true
 end)
 local Rect
@@ -813,6 +849,9 @@ do
     reconfigure = function(self)
       self.active = false
     end,
+    addUIElementBefore = function(self, new, existing)
+      return self.elements:insertBefore(new, existing)
+    end,
     addUIElement = function(self, element)
       self.elements:insert(element)
       return element:activate(self.active)
@@ -820,12 +859,12 @@ do
     removeUIElement = function(self, element)
       return self.elements:remove(element)
     end,
-    clickHandler = function(self)
+    clickHandler = function(self, button)
       if not (self:containsPoint(Mouse.clickX, Mouse.clickY)) then
-        return 
+        return
       end
       for _, element in ipairs(self.elements) do
-        if element.clickHandler and not element:clickHandler() then
+        if element.clickHandler and element:clickHandler(button) == false then
           break
         end
       end
@@ -850,8 +889,8 @@ do
           element:activate(nowActive)
         end
       end
-      if clickPending then
-        self:clickHandler()
+      if clickPending ~= false then
+        self:clickHandler(clickPending)
       end
       return nowActive
     end
@@ -896,7 +935,7 @@ local AnimationQueue
 do
   local _class_0
   local animationList, deletionQueue
-  local _base_0 = { }
+  local _base_0 = {}
   _base_0.__index = _base_0
   _class_0 = setmetatable({
     __init = function() end,
@@ -913,7 +952,7 @@ do
   _base_0.__class = _class_0
   local self = _class_0
   animationList = Stack('active')
-  deletionQueue = { }
+  deletionQueue = {}
   self.addAnimation = function(animation)
     if not (animation.active) then
       return animationList:insert(animation)
@@ -929,7 +968,7 @@ do
   end
   self.animate = function()
     if #animationList == 0 then
-      return 
+      return
     end
     local currentTime = mp.get_time()
     for _, animation in ipairs(animationList) do
@@ -962,19 +1001,19 @@ do
     end,
     addZone = function(self, zone)
       if zone == nil then
-        return 
+        return
       end
       return self.activityZones:insert(zone)
     end,
     removeZone = function(self, zone)
       if zone == nil then
-        return 
+        return
       end
       return self.activityZones:remove(zone)
     end,
     generateUIFromZones = function(self)
-      local seenUIElements = { }
-      self.script = { }
+      local seenUIElements = {}
+      self.script = {}
       self.uiElements:clear()
       AnimationQueue.destroyAnimationStack()
       for _, zone in ipairs(self.activityZones) do
@@ -1037,7 +1076,7 @@ do
   _base_0.__index = _base_0
   _class_0 = setmetatable({
     __init = function(self)
-      self.script = { }
+      self.script = {}
       self.uiElements = Stack()
       self.activityZones = Stack()
       self.displayRequested = false
@@ -1058,7 +1097,7 @@ do
       local displayDuration = settings['request-display-duration']
       mp.add_key_binding("tab", "request-display", function(event)
         if event.event == "repeat" then
-          return 
+          return
         end
         if event.event == "down" or event.event == "press" then
           if displayRequestTimer then
@@ -1142,7 +1181,8 @@ do
       if accel == nil then
         accel = 1
       end
-      self.initialValue, self.endValue, self.duration, self.updateCb, self.finishedCb, self.accel = initialValue, endValue, duration, updateCb, finishedCb, accel
+      self.initialValue, self.endValue, self.duration, self.updateCb, self.finishedCb, self.accel = initialValue,
+          endValue, duration, updateCb, finishedCb, accel
       self.value = self.initialValue
       self.linearProgress = 0
       self.lastUpdate = mp.get_time()
@@ -1389,7 +1429,7 @@ do
   _base_0.__class = _class_0
   local self = _class_0
   hideInactive = settings['bar-hide-inactive']
-  self.instantiatedBars = { }
+  self.instantiatedBars = {}
   self.toggleInactiveVisibility = function(self)
     hideInactive = not hideInactive
     local _list_0 = self.instantiatedBars
@@ -1418,8 +1458,14 @@ do
       self.line[7] = [[]]
       self.line[8] = self.line[8]:format(settings['bar-foreground-style'])
     end,
-    clickHandler = function(self)
-      return mp.commandv("seek", Mouse.clickX * 100 / Window.w, seekString)
+    clickHandler = function(self, button)
+      if button == 0 then
+        self:seek(Mouse.clickX * 100 / Window.w)
+        return false
+      end
+    end,
+    seek = function(self, percent)
+      return mp.commandv('seek', percent, seekString)
     end,
     resize = function(self)
       _class_0.__parent.__base.resize(self)
@@ -1437,7 +1483,8 @@ do
         self.line[6] = position
         if self.barShift > 0 then
           local followingEdge = Window.w * position * 1e-2 - self.barShift
-          self.line[7] = ([[\clip(m %g 0 l %g 0 %g %g %g %g)]]):format(followingEdge, Window.w, Window.w, Window.h, followingEdge, Window.h)
+          self.line[7] = ([[\clip(m %g 0 l %g 0 %g %g %g %g)]]):format(followingEdge, Window.w, Window.w, Window.h,
+            followingEdge, Window.h)
         end
         self.lastPosition = position
         self.needsUpdate = true
@@ -1490,9 +1537,13 @@ do
     reconfigure = function(self)
       _class_0.__parent.__base.reconfigure(self, 'bar-cache-')
       self.line[6] = 100
-      self.line[8] = self.line[8]:format(settings['bar-cache-style']) .. 'm 0 0'
-      self.line[10] = ([[{\p0%s\p1}]]):format(settings['bar-cache-background-style'])
-      self.line[11] = [[]]
+      self.line[9] = ''
+      self.line[10] = '\n'
+      for idx = 1, 9 do
+        self.line[idx + 10] = self.line[idx]
+      end
+      self.line[8] = self.line[8]:format(settings['bar-cache-style'])
+      self.line[18] = self.line[18]:format(settings['bar-cache-background-style'])
       self.fileDuration = mp.get_property_number('duration', nil)
     end,
     resize = function(self)
@@ -1500,11 +1551,16 @@ do
       if self.fileDuration then
         self.coordinateRemap = Window.w / self.fileDuration
       end
-      self.line[9] = [[]]
+      self.line[12] = self.line[2]
+      return self:clobber()
+    end,
+    animate = function(self, value)
+      _class_0.__parent.__base.animate(self, value)
+      self.line[14] = self.line[4]
     end,
     clobber = function(self)
       self.line[9] = ""
-      self.line[11] = ""
+      self.line[19] = ""
     end,
     redraw = function(self)
       _class_0.__parent.__base.redraw(self)
@@ -1513,11 +1569,11 @@ do
       end
       if self.fileDuration and (self.fileDuration > 0) then
         local barDrawing = {
-          past = { },
-          future = { }
+          past = {},
+          future = {}
         }
         local ranges
-        ranges = mp.get_property_native('demuxer-cache-state', { })['seekable-ranges']
+        ranges = mp.get_property_native('demuxer-cache-state', {})['seekable-ranges']
         if ranges and (#ranges > 0) then
           local position = mp.get_property_number('percent-pos', 0)
           local cacheKeyAggregator = {
@@ -1546,20 +1602,19 @@ do
               local rect = ('m %g 0 l %g 1 %g 1 %g 0'):format(rangeStart, rangeStart, rangeEnd, rangeEnd)
               table.insert(barDrawing.past, rect)
             elseif rangeStart > progressPosition then
-              rangeStart = rangeStart - progressPosition
-              rangeEnd = rangeEnd - progressPosition
               local rect = ('m %g 0 l %g 1 %g 1 %g 0'):format(rangeStart, rangeStart, rangeEnd, rangeEnd)
               table.insert(barDrawing.future, rect)
             else
-              rangeEnd = rangeEnd - progressPosition
-              local rectPast = ('m %g 0 l %g 1 %g 1 %g 0'):format(rangeStart, rangeStart, progressPosition, progressPosition)
-              local rectFuture = ('m %g 0 l %g 1 %g 1 %g 0'):format(0, 0, rangeEnd, rangeEnd)
+              local rectPast = ('m %g 0 l %g 1 %g 1 %g 0'):format(rangeStart, rangeStart, progressPosition,
+                progressPosition)
+              local rectFuture = ('m %g 0 l %g 1 %g 1 %g 0'):format(progressPosition, progressPosition, rangeEnd,
+                rangeEnd)
               table.insert(barDrawing.past, rectPast)
               table.insert(barDrawing.future, rectFuture)
             end
           end
-          self.line[9] = table.concat(barDrawing.past, ' ') .. ('m %g 0'):format(progressPosition)
-          self.line[11] = table.concat(barDrawing.future, ' ')
+          self.line[9] = table.concat(barDrawing.past, ' ')
+          self.line[19] = table.concat(barDrawing.future, ' ')
           self.cacheKey = cacheKey
           self.needsUpdate = true
         else
@@ -1739,10 +1794,10 @@ do
   local _parent_0 = BarBase
   local _base_0 = {
     createMarkers = function(self)
-      self.line = { }
-      self.markers = { }
+      self.line = {}
+      self.markers = {}
       local totalTime = mp.get_property_number('duration', 0.01)
-      local chapters = mp.get_property_native('chapter-list', { })
+      local chapters = mp.get_property_native('chapter-list', {})
       local markerHeight = self.active and maxHeight * maxHeightFrac or BarBase.instantiatedBars[1].animationMinHeight
       local markerWidth = self.active and maxWidth or minWidth
       for _index_0 = 1, #chapters do
@@ -1769,6 +1824,32 @@ do
         end
       end)())
     end,
+    clickHandler = function(self, button)
+      if button == 2 then
+        self:seekNearestChapter(Mouse.clickX / Window.w)
+        return false
+      end
+    end,
+    seekNearestChapter = function(self, frac)
+      local chapters = mp.get_property_native('chapter-list', {})
+      if #chapters == 0 then
+        return
+      end
+      local duration = mp.get_property_number('duration', 0)
+      local time = duration * frac
+      local mindist = duration
+      local minidx = #chapters
+      for idx, chap in ipairs(chapters) do
+        local dist = math.abs(chap.time - time)
+        if dist < mindist then
+          mindist = dist
+          minidx = idx
+        elseif dist > mindist then
+          break
+        end
+      end
+      return mp.set_property_native('chapter', minidx - 1)
+    end,
     resize = function(self)
       for i, marker in ipairs(self.markers) do
         marker:resize()
@@ -1778,7 +1859,8 @@ do
     end,
     animate = function(self, value)
       local width = (maxWidth - minWidth) * value + minWidth
-      local height = (maxHeight * maxHeightFrac - BarBase.instantiatedBars[1].animationMinHeight) * value + BarBase.instantiatedBars[1].animationMinHeight
+      local height = (maxHeight * maxHeightFrac - BarBase.instantiatedBars[1].animationMinHeight) * value +
+      BarBase.instantiatedBars[1].animationMinHeight
       for i, marker in ipairs(self.markers) do
         marker:animate(width, height)
         self.line[i] = marker:stringify()
@@ -1803,8 +1885,8 @@ do
   _class_0 = setmetatable({
     __init = function(self)
       _class_0.__parent.__init(self)
-      self.line = { }
-      self.markers = { }
+      self.line = {}
+      self.markers = {}
       self.animation = Animation(0, 1, self.animationDuration, (function()
         local _base_1 = self
         local _fn_0 = _base_1.animate
@@ -1880,7 +1962,8 @@ do
         local timeElapsed = math.floor(mp.get_property_number('time-pos', 0))
         if timeElapsed ~= self.lastTime then
           local update = true
-          self.line[4] = ('%d:%02d:%02d'):format(math.floor(timeElapsed / 3600), math.floor((timeElapsed / 60) % 60), math.floor(timeElapsed % 60))
+          self.line[4] = ('%d:%02d:%02d'):format(math.floor(timeElapsed / 3600), math.floor((timeElapsed / 60) % 60),
+            math.floor(timeElapsed % 60))
           self.lastTime = timeElapsed
           self.needsUpdate = true
         end
@@ -1975,7 +2058,8 @@ do
         local timeRemaining = math.floor(mp.get_property_number('playtime-remaining', 0))
         if timeRemaining ~= self.lastTime then
           local update = true
-          self.line[4] = ('–%d:%02d:%02d'):format(math.floor(timeRemaining / 3600), math.floor((timeRemaining / 60) % 60), math.floor(timeRemaining % 60))
+          self.line[4] = ('–%d:%02d:%02d'):format(math.floor(timeRemaining / 3600), math.floor((timeRemaining / 60) % 60),
+            math.floor(timeRemaining % 60))
           self.lastTime = timeRemaining
           self.needsUpdate = true
         end
@@ -2058,7 +2142,8 @@ do
     end,
     resize = function(self)
       _class_0.__parent.__base.resize(self)
-      self.line[2] = ("%g,%g"):format(clamp(Mouse.x, leftMargin, Window.w - rightMargin), self.yPos - self.animation.value)
+      self.line[2] = ("%g,%g"):format(clamp(Mouse.x, leftMargin, Window.w - rightMargin),
+        self.yPos - self.animation.value)
     end,
     animate = function(self, value)
       self.position = self.yPos - value
@@ -2074,7 +2159,8 @@ do
       self.needsUpdate = true
     end,
     _setTime = function(self, hoverTime)
-      self.line[4] = ([[%d:%02d:%02d]]):format(math.floor(hoverTime / 3600), math.floor((hoverTime / 60) % 60), math.floor(hoverTime % 60))
+      self.line[4] = ([[%d:%02d:%02d]]):format(math.floor(hoverTime / 3600), math.floor((hoverTime / 60) % 60),
+        math.floor(hoverTime % 60))
       self.needsUpdate = true
     end,
     redraw = function(self)
@@ -2157,19 +2243,24 @@ end
 local Thumbnail
 do
   local _class_0
-  local rightMargin, leftMargin, bottomMargin
+  local bottomMargin, borderExpansion, rightMargin, leftMargin, boxStyle
   local _parent_0 = BarAccent
   local _base_0 = {
     updateInfo = function(self, thumbfastInfo)
       self.thumbfast = thumbfastInfo
       self.lastX = -1
+      if self.thumbfast.disabled then
+        self.line[4] = ""
+      end
       self.needsUpdate = true
     end,
     reconfigure = function(self)
       _class_0.__parent.__base.reconfigure(self)
       rightMargin = settings['thumbnail-right-margin']
-      leftMargin = settings['thumbnail-left-margin']
-      bottomMargin = settings['thumbnail-bottom-margin']
+      borderExpansion = settings['thumbnail-border-expansion']
+      leftMargin = settings['thumbnail-left-margin'] + borderExpansion
+      bottomMargin = settings['thumbnail-bottom-margin'] + borderExpansion
+      self.line[3] = boxStyle:format(settings['default-style'], settings['thumbnail-border-style'])
     end,
     activate = function(self, activate)
       _class_0.__parent.__base.activate(self, activate)
@@ -2184,7 +2275,16 @@ do
         if Mouse.x ~= self.lastX and not self.thumbfast.disabled then
           self.lastX = Mouse.x
           local hoverTime = mp.get_property_number('duration', 0) * Mouse.x / Window.w
-          mp.commandv('script-message-to', 'thumbfast', 'thumb', hoverTime, clamp(Mouse._rawX - self.thumbfast.width / 2, leftMargin, Window._rawW - self.thumbfast.width - rightMargin), Window._rawH - bottomMargin * Window.osdScale - self.thumbfast.height)
+          local scaledWidth = self.thumbfast.width / Window.osdScale
+          local thumbX = clamp(self.lastX, leftMargin + (scaledWidth / 2), Window.w - rightMargin - (scaledWidth / 2))
+          self.line[2] = ([[%g,%g]]):format(thumbX, Window.h - (bottomMargin - borderExpansion))
+          local width = scaledWidth + (2 * borderExpansion)
+          local height = (self.thumbfast.height / Window.osdScale) + (2 * borderExpansion)
+          self.line[4] = ([[m 0 0 l %g 0 %g %g 0 %g]]):format(width, width, height, height)
+          mp.commandv('script-message-to', 'thumbfast', 'thumb', hoverTime,
+            clamp(Mouse._rawX - self.thumbfast.width / 2, leftMargin * Window.osdScale,
+              Window._rawW - self.thumbfast.width - (rightMargin * Window.osdScale)),
+            Window._rawH - self.thumbfast.height - (bottomMargin * Window.osdScale))
         end
         self.needsUpdate = true
       end
@@ -2195,8 +2295,13 @@ do
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
     __init = function(self, thumbfastInfo)
+      self.line = {
+        [[{\pos(]],
+        [[0,0]],
+        boxStyle:format(settings['default-style'], settings['thumbnail-border-style']),
+        [[]]
+      }
       _class_0.__parent.__init(self)
-      self.line = { }
       self.lastX = -1
       return self:updateInfo(thumbfastInfo)
     end,
@@ -2223,9 +2328,11 @@ do
   })
   _base_0.__class = _class_0
   local self = _class_0
-  rightMargin = settings['thumbnail-right-margin']
-  leftMargin = settings['thumbnail-left-margin']
   bottomMargin = settings['thumbnail-bottom-margin']
+  borderExpansion = settings['thumbnail-border-expansion']
+  rightMargin = settings['thumbnail-right-margin'] + borderExpansion
+  leftMargin = settings['thumbnail-left-margin'] + borderExpansion
+  boxStyle = [[)\an2%s%s\p1}]]
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
@@ -2281,10 +2388,12 @@ do
         0
       }
       if paused then
-        self.line[7] = 'm 75 37.5 b 75 58.21 58.21 75 37.5 75 16.79 75 0 58.21 0 37.5 0 16.79 16.79 0 37.5 0 58.21 0 75 16.79 75 37.5 m 23 20 l 23 55 33 55 33 20 m 42 20 l 42 55 52 55 52 20\n'
+        self.line[7] =
+        'm 75 37.5 b 75 58.21 58.21 75 37.5 75 16.79 75 0 58.21 0 37.5 0 16.79 16.79 0 37.5 0 58.21 0 75 16.79 75 37.5 m 23 20 l 23 55 33 55 33 20 m 42 20 l 42 55 52 55 52 20\n'
         self.line[14] = 'm 0 0 m 75 75 m 23 20 l 23 55 33 55 33 20 m 42 20 l 42 55 52 55 52 20'
       else
-        self.line[7] = 'm 75 37.5 b 75 58.21 58.21 75 37.5 75 16.79 75 0 58.21 0 37.5 0 16.79 16.79 0 37.5 0 58.21 0 75 16.79 75 37.5 m 25.8333 17.18 l 25.8333 57.6 60.8333 37.39\n'
+        self.line[7] =
+        'm 75 37.5 b 75 58.21 58.21 75 37.5 75 16.79 75 0 58.21 0 37.5 0 16.79 16.79 0 37.5 0 58.21 0 75 16.79 75 37.5 m 25.8333 17.18 l 25.8333 57.6 60.8333 37.39\n'
         self.line[14] = 'm 0 0 m 75 75 m 25.8333 17.18 l 25.8333 57.6 60.8333 37.39'
       end
       AnimationQueue.addAnimation(Animation(0, 1, settings['animation-duration'], (function()
@@ -2344,6 +2453,7 @@ do
         ['playlist-pos-1'] = mp.get_property_number('playlist-pos-1', 1),
         ['playlist-count'] = mp.get_property_number('playlist-count', 1)
       }
+      self.needsUpdate = true
     end,
     generateTitleString = function(self, quote)
       if quote == nil then
@@ -2447,13 +2557,14 @@ do
       timeFormat = settings['system-time-format']
       self.line[2] = ('%g,%g'):format(self.position, topMargin)
       self.line[3] = ([[)\an9%s%s}]]):format(settings['default-style'], settings['system-time-style'])
-      self.animation = Animation(offscreenPosition, settings['system-time-right-margin'], self.animationDuration, (function()
-        local _base_1 = self
-        local _fn_0 = _base_1.animate
-        return function(...)
-          return _fn_0(_base_1, ...)
-        end
-      end)(), nil, 0.5)
+      self.animation = Animation(offscreenPosition, settings['system-time-right-margin'], self.animationDuration,
+        (function()
+          local _base_1 = self
+          local _fn_0 = _base_1.animate
+          return function(...)
+            return _fn_0(_base_1, ...)
+          end
+        end)(), nil, 0.5)
     end,
     resize = function(self)
       self.position = Window.w - self.animation.value
@@ -2490,13 +2601,14 @@ do
       }
       self.lastTime = -1
       self.position = offscreenPosition
-      self.animation = Animation(offscreenPosition, settings['system-time-right-margin'], self.animationDuration, (function()
-        local _base_1 = self
-        local _fn_0 = _base_1.animate
-        return function(...)
-          return _fn_0(_base_1, ...)
-        end
-      end)(), nil, 0.5)
+      self.animation = Animation(offscreenPosition, settings['system-time-right-margin'], self.animationDuration,
+        (function()
+          local _base_1 = self
+          local _fn_0 = _base_1.animate
+          return function(...)
+            return _fn_0(_base_1, ...)
+          end
+        end)(), nil, 0.5)
     end,
     __base = _base_0,
     __name = "SystemTime",
@@ -2593,7 +2705,11 @@ if settings['enable-thumbnail'] then
         return thumbnail:updateInfo(data)
       else
         thumbnail = Thumbnail(data)
-        hoverTimeZone:addUIElement(thumbnail)
+        if hoverTime then
+          hoverTimeZone:addUIElementBefore(thumbnail, hoverTime)
+        else
+          hoverTimeZone:addUIElement(thumbnail)
+        end
         return eventLoop:generateUIFromZones()
       end
     end
