@@ -2,6 +2,7 @@
 font-family = "Cartograph CF"
 font-size = 10
 # theme = "Cobalt2"
+gtk-adwaita = false
 theme =AdventureTime 
 # ===================== BACKGROUD
 background-blur = true

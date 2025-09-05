@@ -169,3 +169,14 @@ fpath+=~/.zfunc
 # man page in vim
 export MANPAGER="nvim +Man!"
 
+eval "$(uv generate-shell-completion zsh)"
+
+# lf (cd into the workign directory)
+#
+
+LFCD="$GOPATH/src/github.com/gokcehan/lf/etc/lfcd.sh"  # source
+LFCD="/home/romjan/.config/lf/lfcd.sh" # pre-built binary, make sure to use absolute path
+
+if [[ -f "$LFCD" ]]; then
+    source "$LFCD"
+fi
